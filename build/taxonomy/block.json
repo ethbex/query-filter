@@ -59,6 +59,14 @@
     "showLabel": {
       "type": "boolean",
       "default": true
+    },
+    "displayAsList": {
+      "type": "boolean",
+      "default": false
+    },
+    "showBullets": {
+      "type": "boolean",
+      "default": true
     }
   },
   "textdomain": "query-filter",

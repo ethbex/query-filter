@@ -9,7 +9,14 @@ import {
 import { useSelect } from '@wordpress/data';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { taxonomy, emptyLabel, label, showLabel } = attributes;
+        const {
+                taxonomy,
+                emptyLabel,
+                label,
+                showLabel,
+                displayAsList,
+                showBullets,
+        } = attributes;
 
 	const taxonomies = useSelect(
 		( select ) => {
@@ -60,30 +67,46 @@ export default function Edit( { attributes, setAttributes } ) {
 							} )
 						}
 					/>
-					<TextControl
-						label={ __( 'Label', 'query-filter' ) }
-						value={ label }
-						help={ __(
-							'If empty then no label will be shown',
-							'query-filter'
-						) }
-						onChange={ ( label ) => setAttributes( { label } ) }
-					/>
-					<ToggleControl
-						label={ __( 'Show Label', 'query-filter' ) }
-						checked={ showLabel }
-						onChange={ ( showLabel ) =>
-							setAttributes( { showLabel } )
-						}
-					/>
-					<TextControl
-						label={ __( 'Empty Choice Label', 'query-filter' ) }
-						value={ emptyLabel }
-						placeholder={ __( 'All', 'query-filter' ) }
-						onChange={ ( emptyLabel ) =>
-							setAttributes( { emptyLabel } )
-						}
-					/>
+                                        <TextControl
+                                                label={ __( 'Label', 'query-filter' ) }
+                                                value={ label }
+                                                help={ __(
+                                                        'If empty then no label will be shown',
+                                                        'query-filter'
+                                                ) }
+                                                onChange={ ( newLabel ) => setAttributes( { label: newLabel } ) }
+                                        />
+                                        <ToggleControl
+                                                label={ __( 'Show Label', 'query-filter' ) }
+                                                checked={ showLabel }
+                                                onChange={ ( newShowLabel ) =>
+                                                        setAttributes( { showLabel: newShowLabel } )
+                                                }
+                                        />
+                                        <ToggleControl
+                                                label={ __( 'Display as list', 'query-filter' ) }
+                                                checked={ displayAsList }
+                                                onChange={ ( newDisplay ) =>
+                                                        setAttributes( { displayAsList: newDisplay } )
+                                                }
+                                        />
+                                        { displayAsList && (
+                                                <ToggleControl
+                                                        label={ __( 'Show bullet points', 'query-filter' ) }
+                                                        checked={ showBullets }
+                                                        onChange={ ( bulletSetting ) =>
+                                                                setAttributes( { showBullets: bulletSetting } )
+                                                        }
+                                                />
+                                        ) }
+                                        <TextControl
+                                                label={ __( 'Empty Choice Label', 'query-filter' ) }
+                                                value={ emptyLabel }
+                                                placeholder={ __( 'All', 'query-filter' ) }
+                                                onChange={ ( newEmptyLabel ) =>
+                                                        setAttributes( { emptyLabel: newEmptyLabel } )
+                                                }
+                                        />
 				</PanelBody>
 			</InspectorControls>
 			<div { ...useBlockProps( { className: 'wp-block-query-filter' } ) }>
@@ -92,18 +115,30 @@ export default function Edit( { attributes, setAttributes } ) {
 						{ label }
 					</label>
 				) }
-				<select
-					className="wp-block-query-filter-taxonomy__select wp-block-query-filter__select"
-					inert
-				>
-					<option>
-						{ emptyLabel || __( 'All', 'query-filter' ) }
-					</option>
-					{ terms.map( ( term ) => (
-						<option key={ term.slug }>{ term.name }</option>
-					) ) }
-				</select>
-			</div>
+                                { displayAsList ? (
+                                        <ul
+                                                className={ `wp-block-query-filter-taxonomy__list wp-block-query-filter__list${ showBullets ? '' : ' no-bullets' }` }
+                                                inert
+                                        >
+                                                <li>{ emptyLabel || __( 'All', 'query-filter' ) }</li>
+                                                { terms.map( ( term ) => (
+                                                        <li key={ term.slug }>{ term.name }</li>
+                                                ) ) }
+                                        </ul>
+                                ) : (
+                                        <select
+                                                className="wp-block-query-filter-taxonomy__select wp-block-query-filter__select"
+                                                inert
+                                        >
+                                                <option>
+                                                        { emptyLabel || __( 'All', 'query-filter' ) }
+                                                </option>
+                                                { terms.map( ( term ) => (
+                                                        <option key={ term.slug }>{ term.name }</option>
+                                                ) ) }
+                                        </select>
+                                ) }
+                        </div>
 		</>
 	);
 }
