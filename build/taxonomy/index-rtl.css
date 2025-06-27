@@ -1,1 +1,1 @@
-@view-transition{navigation:auto}.wp-block-query-filter{display:flex;flex-direction:column;justify-content:stretch}
+.wp-block-query-filter{display:flex;flex-direction:column;justify-content:stretch}.wp-block-query-filter__list{margin:0;padding-right:1.25em}.wp-block-query-filter__list.no-bullets{list-style:none;padding-right:0}
